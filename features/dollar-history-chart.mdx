@@ -1,0 +1,72 @@
+---
+title: "Dollar History Chart"
+description: "Visualize the historical exchange rate of any Argentine dollar type over selectable time ranges."
+---
+
+The Dollar History Chart plots the exchange rate of a selected Argentine dollar type over time using an interactive line chart. You can switch between dollar types and zoom into different time windows to analyze rate trends and volatility.
+
+## How to use it
+
+<Steps>
+  <Step title="Select a dollar type">
+    Use the dropdown or selector to choose which dollar type to chart — for example, **Blue**, **Oficial**, or **MEP**.
+  </Step>
+  <Step title="Choose a time range">
+    Select how far back you want to look. The chart updates immediately when you change the range.
+  </Step>
+  <Step title="Read the chart">
+    Hover over any point on the line to see the exact rate for that date. The Y-axis shows the rate in ARS per USD.
+  </Step>
+</Steps>
+
+## Supported dollar types
+
+| Type (`casa`) | Display name | Description |
+|---|---|---|
+| `oficial` | Oficial | Regulated central bank rate |
+| `blue` | Blue | Informal parallel market rate |
+| `bolsa` | Bolsa (MEP) | Stock exchange dollar (MEP) |
+| `contadoconliqui` | CCL | Contado con liquidación |
+| `mayorista` | Mayorista | Wholesale rate |
+| `cripto` | Cripto | Implied rate from stablecoin markets |
+| `tarjeta` | Tarjeta | Card rate (official + taxes) |
+
+<Warning>
+  The **blue** rate reflects the informal parallel market. It is shown here for informational and research purposes. Transacting at this rate operates outside Argentina's official financial system.
+</Warning>
+
+## Time ranges
+
+| Range label | Period covered |
+|---|---|
+| 1 week | Last 7 days |
+| 1 month | Last 30 days |
+| 3 months | Last 90 days |
+| 6 months | Last 180 days |
+| 1 year | Last 365 days |
+| All time | Full available history |
+
+## Chart behavior
+
+<CardGroup cols={2}>
+  <Card title="Missing data handling" icon="circle-dashed">
+    If the API returns gaps in the time series, the chart fills them using the last known valid value. This prevents visual breaks in the line.
+  </Card>
+  <Card title="Color-coded datasets" icon="palette">
+    Each dollar type has a distinct line color so you can distinguish them if multiple series are displayed simultaneously.
+  </Card>
+</CardGroup>
+
+## Data source
+
+Historical rates are fetched from:
+
+```
+GET https://api.argentinadatos.com/v1/cotizaciones/dolares/{casa}
+```
+
+Replace `{casa}` with the dollar type identifier (e.g., `blue`, `oficial`). The API returns a time series of daily buy and sell rates for the requested type.
+
+<Note>
+  Data availability varies by dollar type. Some types have shorter histories than others. The **All time** range will display whatever history the API has for the selected type.
+</Note>

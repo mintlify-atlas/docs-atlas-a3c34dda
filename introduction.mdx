@@ -1,0 +1,73 @@
+---
+title: "Introduction"
+description: "Argentista is a real-time Argentine economic data dashboard that tracks inflation indices, dollar exchange rates, and provides currency conversion tools."
+---
+
+Argentista is a public, no-login-required web application that gives you live access to Argentine economic data. Whether you're tracking the peso's purchasing power over time, comparing official and informal dollar exchange rates, or converting currencies on the fly, Argentista surfaces the data you need in one place.
+
+## Who it's for
+
+Argentista is useful for anyone who needs to make sense of Argentina's economic landscape:
+
+- **Individuals** tracking how inflation affects their savings or expenses
+- **Businesses and freelancers** pricing services or products in pesos or dollars
+- **Researchers and journalists** analyzing macroeconomic trends
+- **Developers** looking for a reference implementation of real-time economic data visualization
+
+## Economic context
+
+Argentina has experienced persistently high inflation for decades, with annual rates frequently exceeding 100%. The country maintains multiple official and unofficial dollar exchange rates simultaneously — including the official rate, blue (informal) market rate, MEP (electronic payment market) rate, and others — each reflecting different economic conditions and access points.
+
+<Note>
+  Argentista displays data as-is from its upstream data providers. It is not financial advice. Exchange rates and inflation figures can change rapidly.
+</Note>
+
+## App sections
+
+<CardGroup cols={2}>
+  <Card title="Home" icon="house" href="/features/inflation-calculator">
+    The home page gives you two tools side by side: an **Inflation Calculator** to measure how prices have changed between any two dates, and a **Currency Converter** to switch between pesos and any dollar rate in real time.
+  </Card>
+  <Card title="Inflation" icon="chart-line" href="/features/inflation-chart">
+    The `/inflacion` page displays an interactive graph of historical inflation indices alongside a detailed chart of monthly and annual inflation rates, letting you visualize trends over time.
+  </Card>
+  <Card title="Dollar" icon="dollar-sign" href="/features/dollar-prices">
+    The `/dolar` page shows live prices for every major dollar type (official, blue, MEP, CCL, and more) along with a historical price chart so you can track how each rate has evolved.
+  </Card>
+  <Card title="No account needed" icon="lock-open">
+    Argentista is a fully public dashboard. You don't need to create an account, log in, or provide any personal information to use any feature.
+  </Card>
+</CardGroup>
+
+## Data sources
+
+Argentista pulls data from two open APIs:
+
+<CardGroup cols={2}>
+  <Card title="ArgentinaDatos" icon="database" href="https://api.argentinadatos.com">
+    Provides historical and current inflation indices (CPI/IPC data) published by INDEC, Argentina's national statistics institute. Used to power the Inflation Calculator and Inflation Chart.
+  </Card>
+  <Card title="DolarAPI" icon="arrow-right-arrow-left" href="https://dolarapi.com">
+    Provides real-time exchange rates for all major dollar types traded in Argentina — official, blue, MEP, CCL, tarjeta, and more. Used to power the Dollar Prices table, Dollar History Chart, and Currency Converter.
+  </Card>
+</CardGroup>
+
+<Info>
+  Both APIs are free and publicly accessible. Argentista does not store or proxy economic data — it fetches directly from these providers on each page load.
+</Info>
+
+## Tech stack
+
+Argentista is built with a modern, lightweight frontend stack:
+
+| Layer | Technology |
+|---|---|
+| Framework | Astro 5.16 |
+| UI components | React 19 |
+| Styling | Tailwind CSS 4 |
+| Deployment | Vercel |
+| Economic data | ArgentinaDatos API, DolarAPI |
+
+<Tip>
+  Because Argentista is built with Astro, most pages are statically rendered with React islands only where interactivity is needed — keeping page loads fast even on slower connections.
+</Tip>

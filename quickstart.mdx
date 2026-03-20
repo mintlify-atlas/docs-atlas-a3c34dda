@@ -1,80 +1,125 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Start exploring Argentine economic data in under a minute — no account or installation required."
 ---
 
-## Get started in three steps
+Argentista is a web application — there's nothing to install. Open it in your browser and you're ready to go.
 
-Get your documentation site running locally and make your first customization.
+<Steps>
+  <Step title="Open Argentista">
+    Navigate to the Argentista web app in your browser.
 
-### Step 1: Set up your local environment
+    The home page loads two tools immediately:
+    - **Inflation Calculator** — on the left
+    - **Currency Converter** — on the right
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+    <Info>
+      All data is fetched in real time from public APIs. The first load may take a moment while data is retrieved.
+    </Info>
+  </Step>
 
-### Step 2: Deploy your changes
+  <Step title="Use the Inflation Calculator">
+    The Inflation Calculator shows you how the purchasing power of an amount of pesos has changed over time.
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    1. Enter an **initial amount** in Argentine pesos (ARS) in the "Monto Inicial" field.
+    2. Select the **start month and year** — the period from which you want to measure inflation.
+    3. The **end month and year** default to the latest available data. Adjust if needed.
+    4. Results update automatically:
+       - **Monto Final** — the inflation-adjusted equivalent amount
+       - **Total** — total inflation percentage over the period
+       - **Promedio** — average monthly inflation rate
+       - **Anual** — annualized inflation rate
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+    <Note>
+      Data comes from INDEC (Argentina's official statistics bureau) via ArgentinaDatos. Coverage begins in January 2017.
+    </Note>
+  </Step>
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+  <Step title="Explore the Inflation page">
+    Click **Inflación** in the navigation to go to `/inflacion`.
 
-### Step 3: Go live
+    This page shows two views of inflation data:
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+    - **Inflation Graph** (left) — an interactive line chart showing monthly inflation trends over time
+    - **Inflation Indices** (right) — a collapsible table organized by decade and year
 
-## Next steps
+    In the indices table, click a decade to expand it, then click a year to see the monthly breakdown. Each year shows:
+    - Minimum monthly rate (green)
+    - Maximum monthly rate (red)
+    - Average monthly rate (blue)
 
-Now that you have your docs running, explore these key features:
+    <Tip>
+      The most recent decade and year are expanded by default, so you can immediately see current-year data.
+    </Tip>
+  </Step>
+
+  <Step title="Check dollar exchange rates">
+    Click **Dólar** in the navigation to go to `/dolar`.
+
+    The **Dollar Prices** section shows live buy (compra) and sell (venta) prices for all major Argentine dollar market types:
+
+    | Type | Description |
+    |------|-------------|
+    | Oficial | Official government rate (BNA) |
+    | Blue | Informal parallel market rate |
+    | Bolsa (MEP) | Bond-implied electronic payment market |
+    | Contado con Liqui | Capital flow settlement rate |
+    | Mayorista | Wholesale rate for large transactions |
+    | Cripto | Cryptocurrency-implied rate |
+    | Tarjeta | Credit card rate (includes PAIS tax) |
+
+    Each card shows a green pulsing indicator with the last update time.
+
+    <Warning>
+      The **blue dollar** is the informal/parallel market rate. It is not set by the government and trades at a premium to the official rate.
+    </Warning>
+  </Step>
+
+  <Step title="View dollar price history">
+    Scroll down on the `/dolar` page to the **Historical Dollar Chart**.
+
+    Use the **Rango** dropdown to select a time range:
+    - 1 week, 1 month, 3 months, 6 months, 1 year, or all available history
+
+    The chart displays price lines for all dollar types simultaneously, color-coded:
+    - Sky blue — Oficial
+    - Red — Blue
+    - Orange — Bolsa
+    - Purple — Contado con Liqui
+    - Blue — Mayorista
+    - Yellow — Cripto
+    - Green — Tarjeta
+
+    Hover over any point on the chart to see all prices for that date.
+  </Step>
+
+  <Step title="Convert currency">
+    Return to the home page (`/`) and use the **Currency Converter**.
+
+    1. Select a **dollar type** from the dropdown (e.g., "Dólar Blue - $1200").
+    2. Enter an amount in the input field.
+    3. The result updates instantly.
+    4. Click the **swap button** (↕) to reverse the conversion direction between ARS and USD.
+
+    <Tip>
+      The converter uses the **sell price (venta)** of your selected dollar type for all conversions.
+    </Tip>
+  </Step>
+</Steps>
+
+## What's next
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Inflation Calculator" icon="calculator" href="/features/inflation-calculator">
+    Learn how inflation adjustment is calculated using compound monthly rates.
+  </Card>
+  <Card title="Dollar Prices" icon="dollar-sign" href="/features/dollar-prices">
+    Understand the different Argentine dollar market types and what they mean.
+  </Card>
+  <Card title="Dollar History Chart" icon="chart-line" href="/features/dollar-history-chart">
+    Explore historical exchange rate trends across all market types.
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/argentinadatos">
+    Dive into the external APIs that power Argentista's data.
+  </Card>
 </CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>

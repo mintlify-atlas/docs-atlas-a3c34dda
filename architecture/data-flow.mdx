@@ -1,0 +1,117 @@
+---
+title: "Data flow"
+description: "Step-by-step walkthrough of how Argentista fetches, processes, and displays live economic data."
+---
+
+This page traces the path data takes from an external API to the rendered UI, including how loading states, errors, and computed values are handled.
+
+## Page load sequence
+
+<Steps>
+  <Step title="User requests a route">
+    The browser sends an HTTP request to Vercel. The `@astrojs/vercel` SSR adapter invokes the Astro server function for the matching route.
+  </Step>
+  <Step title="Astro renders the HTML shell">
+    Astro evaluates the `.astro` page file on the server, generates the HTML layout and static markup, and sends it to the browser. React component markup is included as empty placeholders at this stage.
+  </Step>
+  <Step title="Browser receives HTML and loads scripts">
+    The browser parses the HTML and downloads the JavaScript bundles for any component marked `client:load`.
+  </Step>
+  <Step title="React islands hydrate">
+    React mounts each component into its placeholder DOM node. Each component initialises its own state — typically `data: null`, `loading: true`, `error: null`.
+  </Step>
+  <Step title="useEffect triggers API fetch">
+    On mount, each component's `useEffect` hook fires and calls `fetch()` against the relevant external API endpoint.
+  </Step>
+  <Step title="Response parsed and stored in state">
+    When the API responds, the component calls `setData()` with the parsed JSON, sets `loading: false`, and React re-renders with the live data.
+  </Step>
+  <Step title="Charts and tables render">
+    Chart.js (via `react-chartjs-2`) and table components receive the data as props and render the final interactive UI.
+  </Step>
+</Steps>
+
+## Independent component fetching
+
+Each React island fetches its own data independently. There is no shared data layer or global store. A typical component looks like this:
+
+```jsx
+const [data, setData] = useState(null);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const res = await fetch('https://api.argentinadatos.com/v1/finanzas/indices/inflacion');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchData();
+}, []);
+```
+
+This pattern is repeated across all data-fetching components. The empty dependency array `[]` ensures the fetch runs once on mount.
+
+## Error handling
+
+Every component wraps its fetch logic in a `try/catch` block:
+
+- **Network errors** (no connection, DNS failure) are caught and stored in `error` state.
+- **HTTP errors** (4xx, 5xx) are detected by checking `res.ok` and throwing explicitly.
+- **Parsing errors** (malformed JSON) are also caught by the same `catch` block.
+
+When `error` is non-null, the component renders an error message instead of the data UI. This prevents blank or broken layouts when an API is unavailable.
+
+<Note>
+  Error boundaries are not used at the React tree level. Each component handles its own errors locally, so one failing component does not affect others on the same page.
+</Note>
+
+## Loading states
+
+While `loading` is `true`, components render a placeholder UI rather than an empty container. Depending on the component:
+
+- **Skeleton loaders** — placeholder blocks that match the shape of the final content (tables, cards).
+- **Spinners** — animated indicators for charts that take longer to render.
+
+This prevents layout shift and gives users immediate visual feedback that data is on its way.
+
+## Inflation calculator formula
+
+The `InflationCalculator` component fetches the monthly CPI index series from ArgentinaDatos and computes the real purchasing-power change between two user-selected dates.
+
+Given a starting amount `A`, a start date index value `I_start`, and an end date index value `I_end`, the adjusted amount is:
+
+```
+Adjusted = A × (I_end / I_start)
+```
+
+The cumulative inflation percentage between the two dates is:
+
+```
+Inflation % = ((I_end / I_start) - 1) × 100
+```
+
+The component:
+1. Fetches the full index series once on mount.
+2. Finds the index entry whose date matches the user's selected start and end months.
+3. Applies the formula above reactively whenever the user changes the amount or dates (via `useCallback` to avoid unnecessary recalculation).
+
+<Info>
+  The index series returned by ArgentinaDatos is cumulative. Each entry represents the price level for that month relative to a fixed base period, so dividing the end index by the start index gives the correct inflation multiplier directly.
+</Info>
+
+## API endpoints used
+
+| Component | API | Endpoint |
+|---|---|---|
+| `InflationCalculator` | ArgentinaDatos | `/v1/finanzas/indices/inflacion` |
+| `InflationGraph` / `InflationChart` | ArgentinaDatos | `/v1/finanzas/indices/inflacion` |
+| `DollarPrices` | DolarAPI | `/v1/dolares` |
+| `DollarHistoryChart` | ArgentinaDatos | `/v1/cotizaciones/dolares/{type}` |

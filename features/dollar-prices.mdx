@@ -1,0 +1,72 @@
+---
+title: "Dollar Prices"
+description: "View live buy and sell rates for all Argentine dollar exchange types, including the blue market rate."
+---
+
+The Dollar Prices panel shows real-time buy and sell rates for every officially tracked Argentine dollar exchange type. Each rate type reflects a different legal or market context for accessing US dollars in Argentina.
+
+## How to use it
+
+<Steps>
+  <Step title="View the official rate">
+    The **Official** (Oficial) dollar card is displayed prominently at the top, spanning the full width of the panel. It shows the regulated bank exchange rate.
+  </Step>
+  <Step title="Compare other rates">
+    Below the official card, all other dollar types are displayed in a grid. Each card shows the buy (compra) and sell (venta) price in ARS.
+  </Step>
+  <Step title="Check the last update time">
+    Each card includes a live update indicator showing when the rate was last refreshed.
+  </Step>
+</Steps>
+
+## Dollar types
+
+<CardGroup cols={2}>
+  <Card title="Oficial" icon="building-columns">
+    The regulated official exchange rate set by the Argentine Central Bank (BCRA). Used for formal international transactions and available through licensed banks.
+  </Card>
+  <Card title="Blue" icon="droplet">
+    The informal parallel market rate, also known as the *dólar blue*. This is not a legal exchange channel — it reflects street-level supply and demand and is typically higher than the official rate.
+  </Card>
+  <Card title="Bolsa (MEP)" icon="chart-bar">
+    The *Mercado Electrónico de Pagos* (MEP) dollar. A legal mechanism where investors buy Argentine bonds in pesos and sell them in dollars through the Buenos Aires stock exchange.
+  </Card>
+  <Card title="Contado con Liquidación (CCL)" icon="arrows-left-right">
+    Similar to MEP but involves offshore settlement. Used by larger investors to move capital internationally within legal bounds.
+  </Card>
+  <Card title="Mayorista" icon="truck">
+    The wholesale exchange rate used for large-volume agricultural and commodity exports. Only accessible to registered businesses.
+  </Card>
+  <Card title="Cripto" icon="bitcoin-sign">
+    An implied rate derived from buying/selling USDT or other stablecoins on Argentine crypto exchanges. Informal but traceable.
+  </Card>
+  <Card title="Tarjeta" icon="credit-card">
+    The rate applied to international purchases made with an Argentine debit or credit card. Includes official rate plus a government surcharge (PAIS tax and perception tax).
+  </Card>
+</CardGroup>
+
+<Warning>
+  The **blue dollar** is the informal parallel market rate. Trading at this rate operates outside the official banking system and is not a legal exchange channel in Argentina. It is shown here for informational purposes only.
+</Warning>
+
+## Price fields
+
+| Field | Description |
+|---|---|
+| Compra (buy) | The rate at which the market or institution buys USD from you — you receive this many ARS per USD |
+| Venta (sell) | The rate at which the market or institution sells USD to you — you pay this many ARS per USD |
+| Fecha de actualización | Timestamp of the last recorded update for that rate |
+
+<Info>
+  The spread between compra and venta represents the margin retained by the exchange operator. The blue market spread is typically wider than the official rate spread.
+</Info>
+
+## Data source
+
+Rates are fetched from:
+
+```
+GET https://dolarapi.com/v1/dolares
+```
+
+The API returns an array of rate objects, one per dollar type, each with `casa`, `nombre`, `compra`, `venta`, and `fechaActualizacion` fields.

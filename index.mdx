@@ -1,97 +1,62 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Argentista"
+description: "Real-time Argentine economic data — inflation indices, dollar exchange rates, and currency conversion in one place."
 ---
 
-## Setting up
-
-Get your documentation site up and running in minutes.
-
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Get Started" icon="rocket" href="/introduction">
+    Learn what Argentista offers and how to navigate its features.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Quickstart" icon="bolt" href="/quickstart">
+    Open the app and start exploring economic data in under a minute.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Core Features" icon="chart-line" href="/features/inflation-calculator">
+    Inflation calculator, dollar prices, charts, and currency converter.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="API Reference" icon="code" href="/api/argentinadatos">
+    Explore the external APIs that power Argentista's real-time data.
   </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## What is Argentista?
 
-Everything you need to create world-class documentation.
+Argentista is a web application that provides real-time economic data about Argentina. It aggregates information from trusted public APIs to give users an up-to-date picture of the Argentine economy — from monthly inflation rates going back decades to live dollar exchange rates across all major market types.
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+<Info>
+All data is sourced from [ArgentinaDatos](https://argentinadatos.com) and [DolarAPI](https://dolarapi.com) — two reliable, open Argentine economic data providers.
+</Info>
 
-## Need inspiration?
+## Key features
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Inflation Calculator" icon="calculator" href="/features/inflation-calculator">
+    Calculate the real value of any amount between two dates using official CPI data.
+  </Card>
+  <Card title="Inflation Chart" icon="chart-bar" href="/features/inflation-chart">
+    Browse monthly inflation indices organized by decade and year, with min/max/average summaries.
+  </Card>
+  <Card title="Dollar Prices" icon="dollar-sign" href="/features/dollar-prices">
+    See live buy/sell prices for all dollar types: oficial, blue, bolsa, tarjeta, cripto, and more.
+  </Card>
+  <Card title="Dollar History Chart" icon="chart-area" href="/features/dollar-history-chart">
+    Visualize dollar price history for any market type over customizable time ranges.
+  </Card>
+  <Card title="Currency Converter" icon="arrows-rotate" href="/features/currency-converter">
+    Convert between Argentine pesos and US dollars using any live exchange rate.
+  </Card>
+  <Card title="Architecture" icon="sitemap" href="/architecture/overview">
+    Understand how Argentista is built with Astro, React, and Tailwind CSS.
+  </Card>
+</CardGroup>
+
+## Data sources
+
+| Source | Endpoint | Used for |
+|--------|----------|---------|
+| ArgentinaDatos | `/v1/finanzas/indices/inflacion` | Monthly inflation indices (CPI) |
+| ArgentinaDatos | `/v1/cotizaciones/dolares/{casa}` | Historical dollar prices by type |
+| DolarAPI | `/v1/dolares` | Live dollar buy/sell prices |
+
+<Tip>
+Data is fetched client-side in real time — every page load retrieves fresh data from the source APIs. No caching layer is applied by default.
+</Tip>

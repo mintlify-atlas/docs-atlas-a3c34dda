@@ -1,0 +1,88 @@
+---
+title: "Architecture overview"
+description: "How Argentista is structured: Astro islands, React components, external APIs, and Vercel deployment."
+---
+
+Argentista is a server-side rendered web app built on **Astro 5** with interactive **React 19** islands. Astro renders the HTML shell on the server; React components hydrate on the client to fetch live data and render charts.
+
+## High-level architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                        Vercel                           │
+│                                                         │
+│  ┌─────────────┐    SSR HTML    ┌────────────────────┐  │
+│  │  Astro SSR  │ ─────────────▶ │   Browser / Client │  │
+│  │  (server)   │                │                    │  │
+│  └──────┬──────┘                │  React islands     │  │
+│         │                       │  hydrate with      │  │
+│         │ renders layout        │  client:load       │  │
+│         ▼                       └────────┬───────────┘  │
+│  ┌─────────────┐                         │              │
+│  │  .astro     │                         │ fetch()      │
+│  │  page files │                         ▼              │
+│  └─────────────┘              ┌──────────────────────┐  │
+│                               │   External APIs      │  │
+│                               │  • ArgentinaDatos    │  │
+│                               │  • DolarAPI          │  │
+│                               └──────────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Astro + React: island architecture
+
+Astro uses an **island architecture**: the page is mostly static HTML, and React components are selectively hydrated where interactivity is needed. You add the `client:load` directive to a component to tell Astro to ship its JavaScript to the browser and hydrate it immediately on page load.
+
+```astro
+<!-- Astro renders the shell; React hydrates the component -->
+<InflationCalculator client:load />
+<CurrencyConverter client:load />
+```
+
+This means:
+- **Initial HTML is fast** — Astro sends pre-rendered markup before any JavaScript runs.
+- **Only interactive components ship JS** — static sections have zero client-side overhead.
+- **Each island is independent** — components fetch their own data and manage their own state.
+
+<Info>
+  All data fetching happens inside React components on the client, not in Astro server code. Astro only provides the page shell and layout.
+</Info>
+
+## Routes
+
+| Route | File | Components rendered |
+|---|---|---|
+| `/` | `src/pages/index.astro` | `InflationCalculator`, `CurrencyConverter` |
+| `/inflacion` | `src/pages/inflacion.astro` | `InflationGraph`, `InflationChart` |
+| `/dolar` | `src/pages/dolar.astro` | `DollarPrices`, `DollarHistoryChart` |
+
+Each page is an `.astro` file that imports and mounts its React components with `client:load`.
+
+## External data dependencies
+
+<Columns cols={2}>
+  <Card title="ArgentinaDatos" icon="database">
+    `https://api.argentinadatos.com` — provides historical inflation indices (CPI) and historical dollar exchange rate data (cotizaciones).
+  </Card>
+  <Card title="DolarAPI" icon="circle-dollar-sign">
+    `https://dolarapi.com` — provides live dollar prices (compra/venta) for all exchange rate types: oficial, blue, MEP, CCL, crypto, tarjeta, and mayorista.
+  </Card>
+</Columns>
+
+Neither API requires authentication. All requests are made directly from the browser via `fetch()`.
+
+## Deployment
+
+Argentista deploys to **Vercel** using the `@astrojs/vercel` SSR adapter. Vercel runs the Astro server function, handles routing, and serves static assets from its CDN.
+
+Vercel Analytics and Speed Insights are enabled, injecting lightweight tracking scripts into every page.
+
+```
+astro check && astro build
+```
+
+The build command type-checks the project before bundling. The output is a Vercel-compatible server function plus static assets.
+
+<Tip>
+  See [Data flow](/architecture/data-flow) for a step-by-step walkthrough of how a page loads and data reaches the UI, and [Tech stack](/architecture/tech-stack) for details on every dependency.
+</Tip>

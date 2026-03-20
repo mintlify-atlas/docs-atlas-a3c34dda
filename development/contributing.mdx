@@ -1,0 +1,175 @@
+---
+title: "Contributing"
+description: "How to contribute code, components, and new pages to Argentista."
+---
+
+## Contribution workflow
+
+<Steps>
+  <Step title="Fork the repository">
+    Fork the repo on GitHub, then clone your fork locally:
+
+    ```bash
+    git clone https://github.com/your-username/argentista.git
+    cd argentista
+    ```
+  </Step>
+
+  <Step title="Create a branch">
+    Create a descriptive branch for your change:
+
+    ```bash
+    git checkout -b mi-contribucion
+    ```
+
+    Use a short, lowercase, hyphen-separated name that describes what the branch does (e.g., `add-tipo-cambio-page`, `fix-inflacion-chart`).
+  </Step>
+
+  <Step title="Make your changes">
+    Follow the code conventions below. Run the build frequently to catch type errors early:
+
+    ```bash
+    npm run build
+    ```
+  </Step>
+
+  <Step title="Commit your changes">
+    Write clear commit messages in imperative mood:
+
+    ```bash
+    git commit -m "Añade nueva funcionalidad"
+    ```
+  </Step>
+
+  <Step title="Push and open a pull request">
+    ```bash
+    git push origin mi-contribucion
+    ```
+
+    Then open a pull request on GitHub against the `main` branch. Describe what you changed and why.
+  </Step>
+</Steps>
+
+<Warning>
+  Run `npm run build` before every commit. The build runs `astro check` for TypeScript validation. Pull requests that fail the build will not be merged.
+</Warning>
+
+## Code conventions
+
+<CardGroup cols={2}>
+  <Card title="React components" icon="react">
+    Use `.jsx` extension. Use `useState` and `useEffect` hooks. Fetch data from APIs inside `useEffect`. No class components.
+  </Card>
+  <Card title="Astro components" icon="star">
+    Use `.astro` extension. Import React components with the `client:load` directive for interactivity.
+  </Card>
+  <Card title="Styling" icon="palette">
+    Use Tailwind CSS utility classes exclusively. Do not write custom CSS files or inline style attributes.
+  </Card>
+  <Card title="Naming" icon="tag">
+    PascalCase for component files and function names (e.g., `DolarCard.jsx`). camelCase for all other functions and variables.
+  </Card>
+</CardGroup>
+
+### Additional rules
+
+- **No code comments** unless explicitly requested in the task.
+- **Never expose API keys or secrets** in source code. Use environment variables.
+- File extensions matter — `.jsx` for React, `.astro` for Astro. Do not mix them.
+
+## Component conventions
+
+### React components (`.jsx`)
+
+React components handle data fetching and interactive UI. They use hooks and render JSX:
+
+```jsx
+import { useState, useEffect } from 'react';
+
+export default function DolarCard() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/dolar')
+      .then(res => res.json())
+      .then(setData);
+  }, []);
+
+  if (!data) return <p>Cargando...</p>;
+
+  return <div className="rounded-xl p-4">{data.value}</div>;
+}
+```
+
+### Astro components (`.astro`)
+
+Astro components define page structure and import React components with `client:load` for client-side hydration:
+
+```astro
+---
+import Layout from '../layouts/Layout.astro';
+import DolarCard from '../components/DolarCard.jsx';
+---
+
+<Layout title="Dólar">
+  <DolarCard client:load />
+</Layout>
+```
+
+<Note>
+  The `client:load` directive is required for any React component that uses `useState`, `useEffect`, or browser APIs. Without it, the component renders as static HTML with no interactivity.
+</Note>
+
+## Adding a new page
+
+<Steps>
+  <Step title="Create the React component">
+    Add a new `.jsx` file in `src/components/`:
+
+    ```jsx
+    // src/components/ReservasChart.jsx
+    import { useState, useEffect } from 'react';
+
+    export default function ReservasChart() {
+      const [data, setData] = useState(null);
+
+      useEffect(() => {
+        fetch('/api/reservas')
+          .then(res => res.json())
+          .then(setData);
+      }, []);
+
+      return <div className="w-full">{/* chart content */}</div>;
+    }
+    ```
+  </Step>
+
+  <Step title="Create the Astro page">
+    Add a new `.astro` file in `src/pages/`. The filename becomes the URL path:
+
+    ```astro
+    ---
+    // src/pages/reservas.astro
+    import Layout from '../layouts/Layout.astro';
+    import ReservasChart from '../components/ReservasChart.jsx';
+    ---
+
+    <Layout title="Reservas">
+      <main>
+        <h1 class="text-2xl font-bold">Reservas del BCRA</h1>
+        <ReservasChart client:load />
+      </main>
+    </Layout>
+    ```
+
+    This file becomes available at `/reservas`.
+  </Step>
+
+  <Step title="Verify the build">
+    ```bash
+    npm run build
+    ```
+
+    Fix any TypeScript or import errors before committing.
+  </Step>
+</Steps>

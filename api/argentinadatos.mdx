@@ -1,0 +1,148 @@
+---
+title: "ArgentinaDatos API"
+description: "Monthly CPI inflation data and historical dollar exchange rates for Argentina, sourced from ArgentinaDatos."
+---
+
+## Overview
+
+The [ArgentinaDatos API](https://argentinadatos.com) is a free, open API that provides Argentine economic and financial data. Argentista uses it to retrieve historical monthly CPI (Consumer Price Index) inflation figures and historical dollar exchange rates.
+
+The API requires no authentication. There are no documented rate limits.
+
+<Info>
+  Data is sourced from INDEC (Instituto Nacional de Estadística y Censos), Argentina's official national statistics bureau.
+</Info>
+
+**Base URL**
+
+```
+https://api.argentinadatos.com
+```
+
+---
+
+## GET /v1/finanzas/indices/inflacion
+
+Returns a time series of monthly CPI inflation readings for Argentina. Each entry represents the percentage change in consumer prices for that calendar month.
+
+This endpoint powers the `InflationCalculator`, `InflationChart`, and `InflationGraph` components.
+
+### Request
+
+```bash
+curl https://api.argentinadatos.com/v1/finanzas/indices/inflacion
+```
+
+This endpoint takes no parameters.
+
+### Response fields
+
+Returns a JSON array. Each element represents one month's CPI reading.
+
+<ResponseField name="[]" type="object[]">
+  Array of monthly inflation records.
+
+  <Expandable title="properties">
+    <ResponseField name="fecha" type="string" required>
+      The first day of the month for this CPI reading, in ISO 8601 date format (`YYYY-MM-DD`). For example, `"2024-12-01"` represents December 2024.
+    </ResponseField>
+
+    <ResponseField name="valor" type="number" required>
+      Monthly inflation as a percentage. For example, `20.6` means prices rose 20.6% that month.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example response
+
+```json
+[
+  { "fecha": "2017-01-01", "valor": 1.3 },
+  { "fecha": "2017-02-01", "valor": 2.5 },
+  { "fecha": "2024-11-01", "valor": 2.4 },
+  { "fecha": "2024-12-01", "valor": 2.7 }
+]
+```
+
+<Note>
+  The array is sorted chronologically from oldest to most recent. Coverage begins in January 2017.
+</Note>
+
+---
+
+## GET /v1/cotizaciones/dolares/{casa}
+
+Returns the full historical daily exchange rate series for a specific Argentine dollar market type. Each entry contains the buy (`compra`) and sell (`venta`) prices in Argentine pesos (ARS) for a given date.
+
+This endpoint powers the `DollarHistoryChart` component.
+
+### Path parameters
+
+<ParamField path="casa" type="string" required>
+  The dollar market type to retrieve. Must be one of the values in the table below.
+
+  | Value | Description |
+  |---|---|
+  | `oficial` | Official government rate (BNA) |
+  | `blue` | Informal/parallel market rate |
+  | `bolsa` | Electronic Payment Market (MEP) — via bonds |
+  | `contadoconliqui` | Cash with settlement (CCL) — capital flight rate |
+  | `mayorista` | Wholesale rate for large transactions |
+  | `cripto` | Cryptocurrency-implied exchange rate |
+  | `tarjeta` | Credit card rate (includes PAIS tax) |
+</ParamField>
+
+### Request
+
+```bash
+curl https://api.argentinadatos.com/v1/cotizaciones/dolares/blue
+```
+
+Replace `blue` with any valid `casa` value.
+
+### Response fields
+
+Returns a JSON array sorted by date in ascending order.
+
+<ResponseField name="[]" type="object[]">
+  Array of daily exchange rate records.
+
+  <Expandable title="properties">
+    <ResponseField name="fecha" type="string" required>
+      The date of this exchange rate reading, in ISO 8601 format (`YYYY-MM-DD`).
+    </ResponseField>
+
+    <ResponseField name="compra" type="number | null" required>
+      The buy price in Argentine pesos (ARS). May be `null` for some dates.
+    </ResponseField>
+
+    <ResponseField name="venta" type="number | null" required>
+      The sell price in Argentine pesos (ARS). May be `null` for some dates.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example response
+
+```json
+[
+  { "fecha": "2023-01-02", "compra": 177.0, "venta": 180.0 },
+  { "fecha": "2023-01-03", "compra": 177.0, "venta": 180.0 },
+  { "fecha": "2023-01-04", "compra": 177.0, "venta": 180.0 }
+]
+```
+
+<Warning>
+  Some entries have `null` values for `venta`. Argentista fills these gaps using forward-fill (last valid value carried forward) before rendering charts.
+</Warning>
+
+---
+
+## Notes
+
+- **No authentication required.** All endpoints are publicly accessible.
+- **No documented rate limits.** Avoid hammering the API; cache responses where possible.
+- **Data source.** Inflation data comes from INDEC official publications. Exchange rate data comes from publicly reported market sources.
+- The `blue` dollar represents Argentina's informal parallel market rate, which operates outside the official banking system.
+
+For more information, visit the [ArgentinaDatos website](https://argentinadatos.com).

@@ -1,0 +1,68 @@
+---
+title: "Currency Converter"
+description: "Convert between Argentine pesos and US dollars using any live dollar type rate."
+---
+
+The Currency Converter lets you quickly convert between Argentine pesos (ARS) and US dollars (USD) using the live sell rate for any supported dollar type. You can swap the conversion direction with a single click and choose which dollar market rate to apply.
+
+## How to use it
+
+<Steps>
+  <Step title="Enter an amount">
+    Type the amount you want to convert in the input field. The converted result updates as you type.
+  </Step>
+  <Step title="Select a dollar type">
+    Open the dropdown and choose the dollar type whose rate you want to use. Each option shows the current sell rate in ARS so you can compare before selecting.
+  </Step>
+  <Step title="Swap the direction if needed">
+    Click the **swap** button to toggle between ARS → USD and USD → ARS conversion. The input and output fields switch automatically.
+  </Step>
+  <Step title="Read the converted amount">
+    The result field displays the converted value based on the selected rate's current sell price.
+  </Step>
+</Steps>
+
+## Conversion formulas
+
+The converter uses the **venta (sell) rate** of the selected dollar type for both directions:
+
+| Direction | Formula |
+|---|---|
+| ARS → USD | `USD = ARS amount ÷ venta rate` |
+| USD → ARS | `ARS = USD amount × venta rate` |
+
+<Info>
+  The sell (venta) rate is used in both directions because it represents the market price of one USD in ARS — the reference rate most commonly used for value comparisons.
+</Info>
+
+## Available dollar types
+
+The dropdown lists all dollar types returned by the live rates API, each with its current sell rate:
+
+| Type | Typical use case |
+|---|---|
+| Oficial | Formal bank transactions, imports/exports |
+| Blue | Informal parallel market reference |
+| Bolsa (MEP) | Legal stock-exchange-based conversion |
+| Contado con Liquidación (CCL) | Offshore capital movement |
+| Mayorista | Wholesale commodity trade |
+| Cripto | Stablecoin market implied rate |
+| Tarjeta | International card purchases |
+
+<Warning>
+  Selecting the **blue** dollar type uses the informal parallel market rate. This rate is not available through official banking channels. Use it only as a market reference, not as a rate you can transact at through a bank.
+</Warning>
+
+<Tip>
+  If you are calculating the cost of an international purchase on an Argentine credit or debit card, use the **Tarjeta** rate — it already includes the PAIS tax and income tax perception applied to card transactions abroad.
+</Tip>
+
+## Data source
+
+Live rates are fetched from:
+
+```
+GET https://dolarapi.com/v1/dolares
+```
+
+The converter reads the `venta` field from each rate object returned by the API. Rates refresh automatically when the component loads.

@@ -1,0 +1,120 @@
+---
+title: "Testing"
+description: "How to write and run tests for Argentista using Vitest and Testing Library."
+---
+
+## Test stack
+
+<CardGroup cols={2}>
+  <Card title="Vitest" icon="flask">
+    Fast unit test runner built on Vite. Configured in `vitest.config.ts` with a jsdom environment.
+  </Card>
+  <Card title="jsdom" icon="window-maximize">
+    Simulates a browser DOM in Node.js so React components can render and interact without a real browser.
+  </Card>
+  <Card title="@testing-library/react" icon="react">
+    Renders React components and provides queries to find elements the way a user would.
+  </Card>
+  <Card title="@testing-library/jest-dom" icon="check-square">
+    Adds custom matchers like `toBeInTheDocument()` and `toHaveTextContent()` to Vitest assertions.
+  </Card>
+</CardGroup>
+
+## Running tests
+
+```bash
+npm run test
+```
+
+This runs `vitest`, which watches for changes by default. To run tests once without watching:
+
+```bash
+npm run test -- --run
+```
+
+## Where to put test files
+
+Test files use the `.test.ts` or `.test.tsx` extension. You can place them in either location:
+
+| Location | When to use |
+| --- | --- |
+| Next to the source file | Unit tests for a specific component or utility |
+| `src/test/` | Shared test helpers, setup files, and integration tests |
+
+Vitest discovers all files matching `**/*.test.ts` and `**/*.test.tsx` automatically.
+
+<Note>
+  The existing `src/basic.test.ts` is a good reference for how tests are structured in this project.
+</Note>
+
+## Writing a component test
+
+Here is a complete example testing a React component with `@testing-library/react`:
+
+```tsx
+// src/components/DolarCard.test.tsx
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import DolarCard from './DolarCard.jsx';
+
+describe('DolarCard', () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve({
+          json: () => Promise.resolve({ value: '1050.50' }),
+        })
+      )
+    );
+  });
+
+  it('renders the dolar value after loading', async () => {
+    render(<DolarCard />);
+
+    const value = await screen.findByText('1050.50');
+    expect(value).toBeInTheDocument();
+  });
+
+  it('shows a loading state before data arrives', () => {
+    render(<DolarCard />);
+
+    expect(screen.getByText('Cargando...')).toBeInTheDocument();
+  });
+});
+```
+
+### Key patterns
+
+- Use `render()` from `@testing-library/react` to mount a component.
+- Use `screen.findBy*` for elements that appear asynchronously (after a fetch resolves).
+- Use `screen.getBy*` for elements that are present in the initial render.
+- Mock `fetch` with `vi.stubGlobal` to control API responses without hitting a real network.
+- Use `vi.fn()` and `beforeEach` to reset mocks between tests.
+
+## Vitest configuration
+
+The test environment is configured in `vitest.config.ts`:
+
+```typescript
+// vitest.config.ts
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+  },
+});
+```
+
+The setup file at `src/test/setup.ts` imports `@testing-library/jest-dom` to make its matchers available in every test:
+
+```typescript
+// src/test/setup.ts
+import '@testing-library/jest-dom';
+```
+
+<Tip>
+  Always run `npm run build` before committing, even when all tests pass. The build runs `astro check` for TypeScript validation, which can catch type errors that tests do not cover.
+</Tip>

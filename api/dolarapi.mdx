@@ -1,0 +1,147 @@
+---
+title: "DolarAPI"
+description: "Real-time buy and sell prices for all major Argentine dollar market types via DolarAPI."
+---
+
+## Overview
+
+[DolarAPI](https://dolarapi.com) is a free, open API that provides real-time Argentine dollar exchange rates across all major market types. Argentista uses it to display current prices in the `DollarPrices` and `CurrencyConverter` components.
+
+The API requires no authentication. There are no documented rate limits.
+
+**Base URL**
+
+```
+https://dolarapi.com
+```
+
+---
+
+## GET /v1/dolares
+
+Returns the current buy and sell prices for all major Argentine dollar market types in a single request. Each object in the response array corresponds to one market type.
+
+This endpoint powers the `DollarPrices` and `CurrencyConverter` components.
+
+### Request
+
+```bash
+curl https://dolarapi.com/v1/dolares
+```
+
+This endpoint takes no parameters.
+
+### Response fields
+
+Returns a JSON array. Each element represents one dollar market type.
+
+<ResponseField name="[]" type="object[]">
+  Array of current exchange rate entries, one per market type.
+
+  <Expandable title="properties">
+    <ResponseField name="casa" type="string" required>
+      Machine-readable market identifier. One of: `oficial`, `blue`, `bolsa`, `contadoconliqui`, `mayorista`, `cripto`, `tarjeta`.
+    </ResponseField>
+
+    <ResponseField name="nombre" type="string" required>
+      Human-readable market name (e.g., `"Oficial"`, `"Blue"`).
+    </ResponseField>
+
+    <ResponseField name="compra" type="number | null" required>
+      Current buy price in Argentine pesos (ARS). May be `null` for some market types.
+    </ResponseField>
+
+    <ResponseField name="venta" type="number" required>
+      Current sell price in Argentine pesos (ARS). This value is used for currency conversions in Argentista.
+    </ResponseField>
+
+    <ResponseField name="fechaActualizacion" type="string" required>
+      ISO 8601 datetime string indicating when this rate was last updated (e.g., `"2024-01-15T14:30:00.000Z"`).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example response
+
+```json
+[
+  {
+    "casa": "oficial",
+    "nombre": "Oficial",
+    "compra": 1010.00,
+    "venta": 1050.00,
+    "fechaActualizacion": "2024-01-15T14:30:00.000Z"
+  },
+  {
+    "casa": "blue",
+    "nombre": "Blue",
+    "compra": 1180.00,
+    "venta": 1200.00,
+    "fechaActualizacion": "2024-01-15T14:30:00.000Z"
+  },
+  {
+    "casa": "bolsa",
+    "nombre": "Bolsa",
+    "compra": 1150.00,
+    "venta": 1155.00,
+    "fechaActualizacion": "2024-01-15T14:30:00.000Z"
+  },
+  {
+    "casa": "contadoconliqui",
+    "nombre": "Contado con liquidación",
+    "compra": 1160.00,
+    "venta": 1165.00,
+    "fechaActualizacion": "2024-01-15T14:30:00.000Z"
+  },
+  {
+    "casa": "mayorista",
+    "nombre": "Mayorista",
+    "compra": 1005.00,
+    "venta": 1008.00,
+    "fechaActualizacion": "2024-01-15T14:30:00.000Z"
+  },
+  {
+    "casa": "cripto",
+    "nombre": "Cripto",
+    "compra": 1175.00,
+    "venta": 1180.00,
+    "fechaActualizacion": "2024-01-15T14:30:00.000Z"
+  },
+  {
+    "casa": "tarjeta",
+    "nombre": "Tarjeta",
+    "compra": null,
+    "venta": 1260.00,
+    "fechaActualizacion": "2024-01-15T14:30:00.000Z"
+  }
+]
+```
+
+---
+
+## Dollar types reference
+
+| `casa` | `nombre` | Description |
+|---|---|---|
+| `oficial` | Oficial | Official government exchange rate (BNA) |
+| `blue` | Blue | Informal/parallel market rate |
+| `bolsa` | Bolsa (MEP) | Electronic Payment Market (MEP) — via bonds |
+| `contadoconliqui` | Contado con Liqui (CCL) | Cash with settlement — capital flight rate |
+| `mayorista` | Mayorista | Wholesale rate for large transactions |
+| `cripto` | Cripto | Cryptocurrency-implied exchange rate |
+| `tarjeta` | Tarjeta | Credit card rate (includes PAIS tax) |
+
+<Note>
+  The `blue` dollar is Argentina's informal parallel market rate. It operates outside the official banking system and typically trades at a significant premium to the `oficial` rate.
+</Note>
+
+---
+
+## Notes
+
+- **No authentication required.** The endpoint is publicly accessible.
+- **No documented rate limits.** Cache responses in your application to avoid unnecessary requests.
+- The `venta` (sell) price is used by Argentista's `CurrencyConverter` for all ARS ↔ USD conversions.
+- The `fechaActualizacion` timestamp lets you show users how fresh the data is.
+
+For more information, visit the [DolarAPI website](https://dolarapi.com).

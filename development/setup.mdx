@@ -1,0 +1,121 @@
+---
+title: "Local setup"
+description: "Get Argentista running on your machine for local development."
+---
+
+## Prerequisites
+
+<CardGroup cols={3}>
+  <Card title="Node.js 18+" icon="node-js">
+    Download from [nodejs.org](https://nodejs.org). Version 18 or higher is required.
+  </Card>
+  <Card title="npm" icon="box">
+    Included with Node.js. Used to install dependencies and run scripts.
+  </Card>
+  <Card title="Git" icon="code-branch">
+    Download from [git-scm.com](https://git-scm.com). Used to clone the repository.
+  </Card>
+</CardGroup>
+
+## Get started
+
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone https://github.com/your-org/argentista.git
+    cd argentista
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    ```bash
+    npm install
+    ```
+
+    This installs all runtime and development dependencies, including Astro, React, and Tailwind CSS.
+  </Step>
+
+  <Step title="Start the development server">
+    ```bash
+    npm run dev
+    ```
+
+    The dev server starts at [http://localhost:4321](http://localhost:4321). Astro watches for file changes and hot-reloads automatically.
+  </Step>
+</Steps>
+
+<Note>
+  Astro's default dev server port is **4321**. If that port is in use, Astro will pick the next available port and print the actual URL to the terminal.
+</Note>
+
+## Other commands
+
+### Build for production
+
+Run a full TypeScript type check and then build optimized static output:
+
+```bash
+npm run build
+```
+
+<Tip>
+  Always run the build before committing. It catches TypeScript errors that the dev server may not surface.
+</Tip>
+
+### Preview the production build
+
+After building, serve the output locally to verify it looks correct before deploying:
+
+```bash
+npm run preview
+```
+
+### Run tests
+
+```bash
+npm run test
+```
+
+See the [testing guide](/development/testing) for details on writing and running tests.
+
+## Project layout
+
+<Tree>
+  <Tree.Folder name="src" defaultOpen>
+    <Tree.Folder name="components" defaultOpen>
+      <Tree.File name="*.jsx (React components)" />
+      <Tree.File name="*.astro (Astro components)" />
+    </Tree.Folder>
+    <Tree.Folder name="layouts">
+      <Tree.File name="Layout.astro" />
+    </Tree.Folder>
+    <Tree.Folder name="pages">
+      <Tree.File name="index.astro" />
+      <Tree.File name="inflacion.astro" />
+      <Tree.File name="dolar.astro" />
+    </Tree.Folder>
+    <Tree.Folder name="styles">
+      <Tree.File name="global.css" />
+    </Tree.Folder>
+    <Tree.Folder name="test">
+      <Tree.File name="setup files" />
+    </Tree.Folder>
+    <Tree.Folder name="Icons">
+      <Tree.File name="*.svg" />
+    </Tree.Folder>
+    <Tree.File name="basic.test.ts" />
+  </Tree.Folder>
+  <Tree.File name="astro.config.mjs" />
+  <Tree.File name="vitest.config.ts" />
+  <Tree.File name="tsconfig.json" />
+  <Tree.File name="package.json" />
+</Tree>
+
+| Directory | Purpose |
+| --- | --- |
+| `src/components/` | React (`.jsx`) and Astro (`.astro`) UI components |
+| `src/layouts/` | Shared page wrapper layouts |
+| `src/pages/` | File-based routes — each `.astro` file becomes a URL |
+| `src/styles/` | Global CSS loaded site-wide |
+| `src/test/` | Vitest setup and helpers |
+| `src/Icons/` | SVG icon assets |

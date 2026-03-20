@@ -1,0 +1,79 @@
+---
+title: "Inflation Calculator"
+description: "Calculate the real purchasing power of an amount in Argentine pesos across any historical date range."
+---
+
+The Inflation Calculator lets you enter an amount in Argentine pesos (ARS) and a date range to see how inflation has eroded or compounded its value over time. It pulls monthly CPI data directly from Argentina Datos and computes the adjusted amount in real time.
+
+## How to use it
+
+<Steps>
+  <Step title="Enter your initial amount">
+    Type an amount in Argentine pesos in the **Initial amount (ARS)** field. This is the value you want to adjust for inflation.
+  </Step>
+  <Step title="Set the start month and year">
+    Choose the month and year your amount originates from. The calculator defaults to 12 months before the most recent available data point.
+  </Step>
+  <Step title="Set the end month and year">
+    Choose the month and year you want to adjust the amount to. The calculator defaults to the most recent available month.
+  </Step>
+  <Step title="Read the results">
+    The calculator displays the inflation-adjusted amount along with summary statistics for the selected range.
+  </Step>
+</Steps>
+
+<Tip>
+  The start and end fields pre-fill to the last 12 months of available data, so you can see a meaningful result immediately without entering anything.
+</Tip>
+
+## What the outputs mean
+
+<CardGroup cols={2}>
+  <Card title="Adjusted amount" icon="peso-sign">
+    The equivalent purchasing power of your initial amount in end-period pesos. This is what you would need to spend to buy the same goods at the end date.
+  </Card>
+  <Card title="Total inflation %" icon="arrow-trend-up">
+    The cumulative percentage by which prices rose over the entire selected range.
+  </Card>
+  <Card title="Average monthly inflation %" icon="calendar">
+    The geometric mean of monthly inflation rates across the selected range — a smoothed view of how fast prices rose per month.
+  </Card>
+  <Card title="Annualized inflation %" icon="chart-line">
+    The equivalent annual rate if the monthly pace stayed constant. Useful for comparing across periods of different lengths.
+  </Card>
+</CardGroup>
+
+## Calculation method
+
+The calculator multiplies together the monthly inflation factors for each month in your selected range:
+
+```
+Inflation factor = (1 + r₁/100) × (1 + r₂/100) × ... × (1 + rₙ/100)
+Adjusted amount  = Initial amount × Inflation factor
+Total inflation  = (Inflation factor − 1) × 100
+```
+
+Where each `r` is the monthly CPI change reported for that month.
+
+## Output reference
+
+| Output | Unit | Description |
+|---|---|---|
+| Adjusted amount | ARS | Initial amount restated in end-period pesos |
+| Total inflation | % | Cumulative price change over the range |
+| Average monthly inflation | % | Geometric mean of monthly rates |
+| Annualized inflation | % | Compound annual equivalent of the monthly rates |
+
+## Data source
+
+Monthly inflation data is fetched from:
+
+```
+GET https://api.argentinadatos.com/v1/finanzas/indices/inflacion
+```
+
+Each record in the response has a `fecha` (date) and `valor` (monthly CPI change in percent). Data is sourced from INDEC, Argentina's national statistics agency.
+
+<Note>
+  Data availability depends on what Argentina Datos has published. If a month is missing from the API response it is excluded from the calculation, which may slightly affect results near the edges of the selected range.
+</Note>
