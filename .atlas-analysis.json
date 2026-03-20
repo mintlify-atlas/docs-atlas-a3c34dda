@@ -1,0 +1,77 @@
+{
+  "projectType": "saas",
+  "projectName": "Argentista",
+  "projectDescription": "A real-time Argentine economic data web app displaying inflation indices, dollar exchange rates, and currency conversion tools powered by public APIs.",
+  "theme": "almond",
+  "primaryColor": "#c3892f",
+  "lightColor": "#74abdb",
+  "darkColor": "#d6d1d4",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["introduction", "quickstart"]
+          },
+          {
+            "group": "Core Features",
+            "pages": [
+              "features/inflation-calculator",
+              "features/inflation-chart",
+              "features/dollar-prices",
+              "features/dollar-history-chart",
+              "features/currency-converter"
+            ]
+          },
+          {
+            "group": "Architecture",
+            "pages": [
+              "architecture/overview",
+              "architecture/data-flow",
+              "architecture/tech-stack"
+            ]
+          },
+          {
+            "group": "Development",
+            "pages": [
+              "development/setup",
+              "development/contributing",
+              "development/testing"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "External APIs",
+            "pages": [
+              "api/argentinadatos",
+              "api/dolarapi"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Real-time inflation calculator with historical data from ArgentinaDatos API",
+    "Dollar exchange rate display for multiple currency types (oficial, blue, bolsa, cripto, tarjeta, etc.)",
+    "Interactive historical dollar price chart with adjustable time ranges (1 week to all-time)",
+    "ARS/USD currency converter with live exchange rates from DolarAPI",
+    "Collapsible inflation index table organized by decade and year",
+    "Interactive inflation trend chart with Chart.js",
+    "Deployed on Vercel with SSR via Astro adapter"
+  ],
+  "publicApiSurface": [
+    "GET https://api.argentinadatos.com/v1/finanzas/indices/inflacion",
+    "GET https://api.argentinadatos.com/v1/cotizaciones/dolares/{casa}",
+    "GET https://dolarapi.com/v1/dolares",
+    "Page: / (Home — InflationCalculator + CurrencyConverter)",
+    "Page: /inflacion (Inflation — InflationGraph + InflationChart)",
+    "Page: /dolar (Dollar — DollarPrices + DollarHistoryChart)"
+  ]
+}
