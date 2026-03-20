@@ -60,16 +60,27 @@ Each page is an `.astro` file that imports and mounts its React components with 
 
 ## External data dependencies
 
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card title="ArgentinaDatos" icon="database">
     `https://api.argentinadatos.com` — provides historical inflation indices (CPI) and historical dollar exchange rate data (cotizaciones).
   </Card>
   <Card title="DolarAPI" icon="circle-dollar-sign">
     `https://dolarapi.com` — provides live dollar prices (compra/venta) for all exchange rate types: oficial, blue, MEP, CCL, crypto, tarjeta, and mayorista.
   </Card>
-</Columns>
+</CardGroup>
 
 Neither API requires authentication. All requests are made directly from the browser via `fetch()`.
+
+## Header and navigation
+
+The `Header.astro` component is shared across all pages via the layout and persists across client-side navigations (using Astro's `transition:persist`). It contains:
+
+- **Navigation links** — Inicio (`/`), Dólar (`/dolar`), and Inflación (`/inflacion`), with the current route highlighted.
+- **Live dollar ticker** — a scrolling marquee bar below the nav that shows real-time buy/sell prices for every dollar type. The ticker fetches live data from `https://dolarapi.com/v1/dolares` **server-side at render time** (inside the `.astro` frontmatter), meaning the prices are baked into the SSR HTML on each request.
+
+<Info>
+  The ticker data is fetched server-side in the Astro component, unlike the React component data which is fetched client-side. This means the ticker reflects prices at the time Vercel rendered the page, not continuously updated in the browser.
+</Info>
 
 ## Deployment
 

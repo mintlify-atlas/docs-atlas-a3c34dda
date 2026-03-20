@@ -1,32 +1,61 @@
 ---
 title: "Inflation Chart"
-description: "Browse Argentina's complete monthly inflation history organized by decade and year in a collapsible tree view."
+description: "Browse Argentina's complete monthly inflation history as an interactive line chart and a collapsible decade/year index."
 ---
 
-The Inflation Chart presents Argentina's full monthly CPI history as an interactive collapsible tree organized by decade and year. Each year summarizes its data with a color-coded indicator so you can spot high-inflation periods at a glance before drilling into monthly detail.
+The `/inflacion` page shows two complementary views of Argentina's monthly CPI data side by side:
 
-## How to use it
+- **Inflation Graph** (left) — an interactive line chart with date pickers to zoom in on any time window
+- **Inflation Indices** (right) — a collapsible tree organized by decade and year, with min/max/average summaries
+
+## Inflation Graph
+
+The Inflation Graph renders a Chart.js line chart of monthly inflation rates (`valor`) over time. Date picker inputs let you filter to any date range within the available data.
+
+<Steps>
+  <Step title="Set the start date">
+    Use the **Desde** (From) date input to pick the earliest date you want to see. It defaults to the first available data point in the series.
+  </Step>
+  <Step title="Set the end date">
+    Use the **Hasta** (To) date input to pick the latest date. It defaults to the most recent available data point.
+  </Step>
+  <Step title="Read the chart">
+    The line chart updates immediately. Hover over any point to see the exact monthly inflation percentage for that date. The Y-axis shows inflation in percent; the X-axis shows dates.
+  </Step>
+</Steps>
+
+<Tip>
+  Narrow the date range to zoom in on a specific period, such as the hyperinflationary episodes of the early 1990s or the acceleration starting in 2022.
+</Tip>
+
+## Inflation Indices
+
+The Inflation Indices panel presents the same data as an expandable tree grouped by decade and year.
 
 <Steps>
   <Step title="Expand a decade">
-    Click any decade row (e.g., **2010s**) to expand it and reveal the years it contains.
+    Click any decade row (e.g., **2020s**) to expand it and reveal the years it contains.
   </Step>
   <Step title="Expand a year">
-    Click a year row to expand it and see the monthly breakdown. The year row shows a summary before you open it.
+    Click a year row to expand it and see the monthly breakdown. Each year row shows a summary before you open it.
   </Step>
   <Step title="Read the monthly values">
     Each expanded month shows the recorded CPI change in percent for that month, color-coded by magnitude.
   </Step>
 </Steps>
 
+<Note>
+  The most recent decade and year are expanded by default, so you see current-year data immediately on load.
+</Note>
+
 ## What the data shows
 
 <CardGroup cols={2}>
   <Card title="Year summary" icon="calendar-days">
-    Each year row displays the minimum, maximum, and average monthly inflation percentages recorded that year — giving you a quick overview without expanding every month.
+    Each year row in the Indices panel displays the minimum, maximum, and average monthly inflation percentages recorded that year — giving you a quick overview without expanding every month.
   </Card>
   <Card title="Color coding" icon="palette">
-    Monthly values are color-coded to indicate inflation intensity: green for low, orange for moderate, and red for high inflation months.
+    Monthly values in the Indices panel are color-coded to indicate inflation intensity: green for low, orange for moderate, and red for high inflation months.
   </Card>
 </CardGroup>
 
@@ -52,14 +81,14 @@ The Inflation Chart presents Argentina's full monthly CPI history as an interact
 
 ## Data source
 
-Monthly inflation data is fetched from:
+Both components fetch from the same endpoint:
 
 ```
 GET https://api.argentinadatos.com/v1/finanzas/indices/inflacion
 ```
 
-Data covers all months available in the Argentina Datos API, which sources from INDEC official CPI releases.
+Data covers all months available in the ArgentinaDatos API, sourced from INDEC official CPI releases.
 
 <Note>
-  The tree groups data by the decade of each record's date. Decades with no data points are not shown.
+  The Indices tree groups data by the decade of each record's date. Decades with no data points are not shown. The Graph's date pickers are pre-filled to the full available range on load.
 </Note>

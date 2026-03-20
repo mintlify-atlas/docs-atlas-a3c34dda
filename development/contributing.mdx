@@ -7,11 +7,11 @@ description: "How to contribute code, components, and new pages to Argentista."
 
 <Steps>
   <Step title="Fork the repository">
-    Fork the repo on GitHub, then clone your fork locally:
+    Fork [marcoszinga94/Argentista](https://github.com/marcoszinga94/Argentista) on GitHub, then clone your fork locally:
 
     ```bash
-    git clone https://github.com/your-username/argentista.git
-    cd argentista
+    git clone https://github.com/YOUR_USERNAME/Argentista.git
+    cd Argentista
     ```
   </Step>
 
@@ -90,14 +90,14 @@ export default function DolarCard() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('/api/dolar')
+    fetch('https://dolarapi.com/v1/dolares')
       .then(res => res.json())
       .then(setData);
   }, []);
 
   if (!data) return <p>Cargando...</p>;
 
-  return <div className="rounded-xl p-4">{data.value}</div>;
+  return <div className="rounded-xl p-4">{data[0].venta}</div>;
 }
 ```
 

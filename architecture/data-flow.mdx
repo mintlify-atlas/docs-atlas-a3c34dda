@@ -84,27 +84,33 @@ This prevents layout shift and gives users immediate visual feedback that data i
 
 ## Inflation calculator formula
 
-The `InflationCalculator` component fetches the monthly CPI index series from ArgentinaDatos and computes the real purchasing-power change between two user-selected dates.
+The `InflationCalculator` component fetches the monthly CPI series from ArgentinaDatos and computes the real purchasing-power change between two user-selected dates.
 
-Given a starting amount `A`, a start date index value `I_start`, and an end date index value `I_end`, the adjusted amount is:
-
-```
-Adjusted = A × (I_end / I_start)
-```
-
-The cumulative inflation percentage between the two dates is:
+The API returns each month's CPI as a **percentage change** (e.g., `20.6` means prices rose 20.6% that month). To get the cumulative change across a range, the component multiplies together the monthly inflation factors for every month in the selected range:
 
 ```
-Inflation % = ((I_end / I_start) - 1) × 100
+inflationFactor = (1 + r₁/100) × (1 + r₂/100) × … × (1 + rₙ/100)
+adjustedAmount  = initialAmount × inflationFactor
+totalInflation  = (inflationFactor − 1) × 100
+```
+
+Where each `r` is the `valor` field for that month in the API response.
+
+The annualized and average monthly rates are then derived:
+
+```
+annualizedInflation    = (1 + totalInflation/100)^(12/months) − 1
+avgMonthlyInflation    = (1 + annualizedInflation)^(1/12) − 1
 ```
 
 The component:
-1. Fetches the full index series once on mount.
-2. Finds the index entry whose date matches the user's selected start and end months.
-3. Applies the formula above reactively whenever the user changes the amount or dates (via `useCallback` to avoid unnecessary recalculation).
+1. Fetches the full monthly series once on mount and sorts it by date.
+2. Slices the array to the months between the user's selected start and end dates.
+3. Applies the compound multiplication above using `Array.reduce`.
+4. Recalculates reactively whenever the user changes the amount or date fields (via `useCallback`).
 
 <Info>
-  The index series returned by ArgentinaDatos is cumulative. Each entry represents the price level for that month relative to a fixed base period, so dividing the end index by the start index gives the correct inflation multiplier directly.
+  Each `valor` in the API response is a month-over-month percentage change, not a cumulative index level. The compound product formula is required to get the correct total inflation across multiple months.
 </Info>
 
 ## API endpoints used
@@ -114,4 +120,4 @@ The component:
 | `InflationCalculator` | ArgentinaDatos | `/v1/finanzas/indices/inflacion` |
 | `InflationGraph` / `InflationChart` | ArgentinaDatos | `/v1/finanzas/indices/inflacion` |
 | `DollarPrices` | DolarAPI | `/v1/dolares` |
-| `DollarHistoryChart` | ArgentinaDatos | `/v1/cotizaciones/dolares/{type}` |
+| `DollarHistoryChart` | ArgentinaDatos | `/v1/cotizaciones/dolares/{casa}` |

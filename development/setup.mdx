@@ -22,8 +22,8 @@ description: "Get Argentista running on your machine for local development."
 <Steps>
   <Step title="Clone the repository">
     ```bash
-    git clone https://github.com/your-org/argentista.git
-    cd argentista
+    git clone https://github.com/marcoszinga94/Argentista.git
+    cd Argentista
     ```
   </Step>
 
@@ -80,36 +80,23 @@ See the [testing guide](/development/testing) for details on writing and running
 
 ## Project layout
 
-<Tree>
-  <Tree.Folder name="src" defaultOpen>
-    <Tree.Folder name="components" defaultOpen>
-      <Tree.File name="*.jsx (React components)" />
-      <Tree.File name="*.astro (Astro components)" />
-    </Tree.Folder>
-    <Tree.Folder name="layouts">
-      <Tree.File name="Layout.astro" />
-    </Tree.Folder>
-    <Tree.Folder name="pages">
-      <Tree.File name="index.astro" />
-      <Tree.File name="inflacion.astro" />
-      <Tree.File name="dolar.astro" />
-    </Tree.Folder>
-    <Tree.Folder name="styles">
-      <Tree.File name="global.css" />
-    </Tree.Folder>
-    <Tree.Folder name="test">
-      <Tree.File name="setup files" />
-    </Tree.Folder>
-    <Tree.Folder name="Icons">
-      <Tree.File name="*.svg" />
-    </Tree.Folder>
-    <Tree.File name="basic.test.ts" />
-  </Tree.Folder>
-  <Tree.File name="astro.config.mjs" />
-  <Tree.File name="vitest.config.ts" />
-  <Tree.File name="tsconfig.json" />
-  <Tree.File name="package.json" />
-</Tree>
+```
+src/
+├── components/      # React (.jsx) and Astro (.astro) UI components
+├── layouts/         # Shared page wrapper (Layout.astro)
+├── pages/           # File-based routes
+│   ├── index.astro       → /
+│   ├── dolar.astro       → /dolar
+│   └── inflacion.astro   → /inflacion
+├── styles/          # Global CSS
+├── test/            # Vitest setup (setup.ts)
+├── Icons/           # SVG icon assets
+└── basic.test.ts    # Example test file
+astro.config.mjs
+vitest.config.ts
+tsconfig.json
+package.json
+```
 
 | Directory | Purpose |
 | --- | --- |

@@ -94,24 +94,24 @@ describe('DolarCard', () => {
 
 ## Vitest configuration
 
-The test environment is configured in `vitest.config.ts`:
+The test environment is configured in `vitest.config.ts`. Because the project uses Astro, it wraps Vite config using `getViteConfig` from `astro/config` rather than Vitest's own `defineConfig`:
 
-```typescript
-// vitest.config.ts
-import { defineConfig } from 'vitest/config';
+```typescript vitest.config.ts
+/// <reference types="vitest" />
+import { getViteConfig } from 'astro/config';
 
-export default defineConfig({
+export default getViteConfig({
   test: {
     environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
+    setupFiles: './src/test/setup.ts',
+    globals: true,
   },
-});
+} as any);
 ```
 
 The setup file at `src/test/setup.ts` imports `@testing-library/jest-dom` to make its matchers available in every test:
 
-```typescript
-// src/test/setup.ts
+```typescript src/test/setup.ts
 import '@testing-library/jest-dom';
 ```
 

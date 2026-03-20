@@ -5,45 +5,45 @@ description: "Every technology Argentista uses, why it was chosen, and the versi
 
 ## Core framework
 
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card title="Astro 5.16" icon="rocket">
     SSR framework that renders HTML on the server and ships minimal JavaScript to the client. Provides the routing layer, layouts, and island architecture that lets React components hydrate selectively.
   </Card>
   <Card title="React 19" icon="atom">
     UI component library for all interactive islands. Uses `useState`, `useEffect`, and `useCallback` hooks for local state, data fetching, and memoised callbacks. No external state manager is needed.
   </Card>
-</Columns>
+</CardGroup>
 
 ## Styling
 
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card title="Tailwind CSS 4" icon="paintbrush">
-    Utility-first CSS framework. Styles are applied directly in JSX and `.astro` templates via class names. Version 4 uses a CSS-native configuration instead of `tailwind.config.js`.
+    Utility-first CSS framework. Styles are applied directly in JSX and `.astro` templates via class names. Version 4 uses a CSS-native configuration via `@tailwindcss/vite` instead of `tailwind.config.js`.
   </Card>
-</Columns>
+</CardGroup>
 
 ## Data visualisation
 
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card title="Chart.js" icon="chart-line">
     Canvas-based charting library that renders interactive line charts for dollar exchange rate history and inflation trends.
   </Card>
   <Card title="react-chartjs-2" icon="code">
     React wrapper around Chart.js. Provides declarative `<Line>` and other chart components that accept Chart.js config objects as props, integrating cleanly with React's render cycle.
   </Card>
-</Columns>
+</CardGroup>
 
 ## Utilities
 
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card title="date-fns" icon="calendar">
-    Lightweight date manipulation and formatting library. Used to parse API date strings, format labels for chart axes, and compute date ranges for the inflation calculator.
+    Lightweight date manipulation and formatting library. Used to parse API date strings, format labels for chart axes, and compute date ranges for the dollar history chart.
   </Card>
-</Columns>
+</CardGroup>
 
 ## Deployment and monitoring
 
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card title="@astrojs/vercel" icon="triangle">
     Official Astro adapter for Vercel. Compiles the Astro project into a Vercel serverless function that handles SSR, routing, and static asset serving.
   </Card>
@@ -53,18 +53,18 @@ description: "Every technology Argentista uses, why it was chosen, and the versi
   <Card title="@vercel/speed-insights" icon="gauge">
     Measures Core Web Vitals (LCP, CLS, INP) in real user sessions and surfaces them in the Vercel dashboard.
   </Card>
-</Columns>
+</CardGroup>
 
 ## Development tooling
 
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card title="Vitest" icon="flask-conical">
-    Fast unit test runner built on Vite. Used with `@testing-library/react` to test React components in a jsdom environment. Configuration lives in `src/test/`.
+    Fast unit test runner built on Vite. Used with `@testing-library/react` to test React components in a jsdom environment. Configured in `vitest.config.ts` using `getViteConfig` from `astro/config`.
   </Card>
   <Card title="astro check" icon="circle-check">
     Astro's built-in TypeScript and type-checking command. Runs before every production build (`astro check && astro build`) to catch type errors in `.astro` files and imported TypeScript modules.
   </Card>
-</Columns>
+</CardGroup>
 
 ## Dependency versions
 
